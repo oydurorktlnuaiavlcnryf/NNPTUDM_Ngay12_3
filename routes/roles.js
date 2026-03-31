@@ -3,6 +3,7 @@ var express = require("express");
 var router = express.Router();
 
 let roleModel = require("../schemas/roles");
+let userModel = require("../schemas/users");
 
 
 router.get("/", async function (req, res, next) {
@@ -25,6 +26,18 @@ router.get("/:id", async function (req, res, next) {
     }
 });
 
+router.get("/:id/users", async function (req, res, next) {
+    try {
+        let role = await roleModel.findOne({ _id: req.params.id, isDeleted: false });
+        if (!role) {
+            return res.status(404).send({ message: "Role not found" });
+        }
+        let users = await userModel.find({ role: req.params.id, isDeleted: false });
+        res.send(users);
+    } catch (error) {
+        res.status(400).send({ message: error.message });
+    }
+});
 
 router.post("/", async function (req, res, next) {
     try {

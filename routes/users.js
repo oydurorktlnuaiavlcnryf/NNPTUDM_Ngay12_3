@@ -78,6 +78,36 @@ router.post("/", [
     }
   });
 
+router.post("/enable", async function (req, res, next) {
+  try {
+    let { email, username } = req.body;
+    let user = await userModel.findOne({ email: email, username: username, isDeleted: false });
+    if (!user) {
+      return res.status(404).send({ message: "User not found" });
+    }
+    user.status = true;
+    await user.save();
+    res.send(user);
+  } catch (err) {
+    res.status(400).send({ message: err.message });
+  }
+});
+
+router.post("/disable", async function (req, res, next) {
+  try {
+    let { email, username } = req.body;
+    let user = await userModel.findOne({ email: email, username: username, isDeleted: false });
+    if (!user) {
+      return res.status(404).send({ message: "User not found" });
+    }
+    user.status = false;
+    await user.save();
+    res.send(user);
+  } catch (err) {
+    res.status(400).send({ message: err.message });
+  }
+});
+
 router.put("/:id", async function (req, res, next) {
   try {
     let id = req.params.id;

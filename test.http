@@ -1,0 +1,49 @@
+### Tạo một Role mới
+# Bấm "Send Request" ở trên dòng lệnh này để tạo Role
+# @name createRole
+POST http://localhost:3000/api/v1/roles
+Content-Type: application/json
+
+{
+    "name": "Admin",
+    "description": "Administrator Role"
+}
+
+###
+
+@roleId = {{createRole.response.body._id}}
+
+### Tạo một User mới thuộc Role vừa tạo
+# @name createUser
+POST http://localhost:3000/api/v1/users
+Content-Type: application/json
+
+{
+    "username": "tuan123",
+    "password": "Password123!",
+    "email": "tuan123@gmail.com",
+    "fullName": "Tuấn Trần",
+    "role": "{{roleId}}"
+}
+
+### Test api enable User
+POST http://localhost:3000/api/v1/users/enable
+Content-Type: application/json
+
+{
+    "email": "tuan123@gmail.com",
+    "username": "tuan123"
+}
+
+### Test api disable User
+POST http://localhost:3000/api/v1/users/disable
+Content-Type: application/json
+
+{
+    "email": "tuan123@gmail.com",
+    "username": "tuan123"
+}
+
+### Lấy danh sách tất cả các User thuộc ID Role
+GET http://localhost:3000/api/v1/roles/{{roleId}}/users
+Content-Type: application/json
